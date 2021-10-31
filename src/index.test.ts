@@ -23,6 +23,31 @@ describe('topologicalGroupedSort', () => {
         ])
     });
 
+    it('should sort complex trees', () => {
+        const a = new SortTreeNode('a');
+        const b = new SortTreeNode('b', [a]);
+        const c = new SortTreeNode('c', [a]);
+        const d = new SortTreeNode('d', [b]);
+        const e = new SortTreeNode('e', [c]);
+        const f = new SortTreeNode('f', [d, e]);
+        const g = new SortTreeNode('g', [c, b]);
+
+        expect(getValuesLayers(topologicalGroupedSort([
+            a,
+            b,
+            c,
+            d,
+            e,
+            f,
+            g,
+        ]))).toEqual([
+            ['a'],
+            ['b', 'c'],
+            ['d', 'e', 'g'],
+            ['f']
+        ])
+    });
+
     it('should throw an exception for cycled deps', () => {
         const a = new SortTreeNode('a', []);
         const b = new SortTreeNode('b', [a]);
@@ -31,7 +56,7 @@ describe('topologicalGroupedSort', () => {
         function run() {
             topologicalGroupedSort([
                 c,
-                a.withDep(c),
+                a.addDep(c),
                 b
             ]);
         }

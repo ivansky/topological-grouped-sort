@@ -4,10 +4,15 @@ export class SortTreeNode<T> {
     __dependants: SortTreeNode<T>[] = [];
 
     constructor(public value: T, public deps: SortTreeNode<T>[] = []) {
-        deps.forEach(dep => this.withDep(dep));
+        this.addDeps(deps);
     }
 
-    withDep(dep: SortTreeNode<T>) {
+    addDeps(deps: SortTreeNode<T>[]) {
+        deps.forEach(dep => this.addDep(dep));
+        return this;
+    }
+
+    addDep(dep: SortTreeNode<T>) {
         dep.__dependants.push(this);
         this.__degree++;
         return this;
