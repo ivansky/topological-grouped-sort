@@ -28,16 +28,13 @@ describe('topologicalGroupedSort', () => {
         const b = new SortTreeNode('b', [a]);
         const c = new SortTreeNode('c', [b]);
 
-        a.deps.push(c);
-        a.__degree++;
-
         function run() {
             topologicalGroupedSort([
                 c,
-                a,
+                a.withDep(c),
                 b
             ]);
         }
-        expect(run).toThrow();
+        expect(run).toThrow('Cycled paths: \nc->a->b->c');
     });
 });
